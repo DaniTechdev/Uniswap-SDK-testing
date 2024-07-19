@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Contract, ethers } from "ethers";
+import { Contract, ethers, logger } from "ethers";
 //INTERNAL IMPORT
 
 const Home = () => {
@@ -24,7 +24,38 @@ const Home = () => {
     provider
   );
 
-  console.log("uniswap contract fetch", poolContract);
+  // console.log("uniswap contract fetch", poolContract);
+
+  let immutables = {
+    factory: "",
+    token0: "",
+    token1: "",
+    fee: 0,
+    tickSpacing: 0,
+    maxLiquidityPerTick: 0,
+  };
+
+  // console.log(immutables);
+
+  async function getPoolImmutables() {
+    immutables = {
+      factory: await poolContract.factory(),
+      token0: await poolContract.token0(),
+      token1: await poolContract.token1(),
+      fee: await poolContract.fee(),
+      tickSpacing: await poolContract.tickSpacing(),
+      maxLiquidityPerTick: await poolContract.maxLiquidityPerTick(),
+    };
+
+    const PoolImmutables = immutables;
+
+    return PoolImmutables;
+  }
+
+  getPoolImmutables().then((result) => {
+    console.log(result);
+  });
+
   return <div>Heloo</div>;
 };
 
